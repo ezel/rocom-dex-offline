@@ -20,6 +20,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import org.martin.rocomdex.ui.HomeScreen
+import org.martin.rocomdex.ui.pet.PetsScreen
+import org.martin.rocomdex.ui.skill.SkillsScreen
 import org.martin.rocomdex.ui.theme.RocomDexTheme
 
 class MainActivity : ComponentActivity() {
@@ -56,11 +59,12 @@ fun RocomDexApp() {
             }
         }
     ) {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            Greeting(
-                name = "Android",
-                modifier = Modifier.padding(innerPadding)
-            )
+        when(currentDestination) {
+            AppDestinations.HOME -> HomeScreen()
+            AppDestinations.PETS -> PetsScreen()
+            AppDestinations.SKILLS -> SkillsScreen()
+            AppDestinations.FAVOURITE -> PetsScreen()
+            AppDestinations.PROFILE -> PetsScreen()
         }
     }
 }
@@ -69,23 +73,9 @@ enum class AppDestinations(
     val label: String,
     val icon: Int,
 ) {
-    HOME("Home", R.drawable.ic_home),
-    FAVORITES("Favorites", R.drawable.ic_favorite),
-    PROFILE("Profile", R.drawable.ic_account_box),
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    RocomDexTheme {
-        Greeting("Android")
-    }
+    HOME("查找", R.drawable.ic_home),
+    PETS("精灵", R.drawable.ic_home),
+    SKILLS("技能", R.drawable.ic_home),
+    FAVOURITE("收藏", R.drawable.ic_favorite),
+    PROFILE("关于", R.drawable.ic_account_box),
 }
