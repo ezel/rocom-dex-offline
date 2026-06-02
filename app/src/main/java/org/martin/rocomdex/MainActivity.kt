@@ -7,12 +7,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -20,6 +21,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.ui.NavDisplay
 import org.martin.rocomdex.ui.HomeScreen
 import org.martin.rocomdex.ui.pet.PetsScreen
 import org.martin.rocomdex.ui.skill.SkillsScreen
@@ -40,11 +44,12 @@ class MainActivity : ComponentActivity() {
 @PreviewScreenSizes
 @Composable
 fun RocomDexApp() {
-    var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.HOME) }
+    var currentDestination by rememberSaveable { mutableStateOf(RouteDestinations.HOME) }
+    val backStack = remember { mutableStateListOf<Any>(RouteSearch) }
 
     NavigationSuiteScaffold(
         navigationSuiteItems = {
-            AppDestinations.entries.forEach {
+            RouteDestinations.entries.forEach {
                 item(
                     icon = {
                         Icon(
@@ -54,28 +59,31 @@ fun RocomDexApp() {
                     },
                     label = { Text(it.label) },
                     selected = it == currentDestination,
-                    onClick = { currentDestination = it }
+                    onClick = { backStack.add(it.route) }
                 )
             }
         }
     ) {
-        when(currentDestination) {
-            AppDestinations.HOME -> HomeScreen()
-            AppDestinations.PETS -> PetsScreen()
-            AppDestinations.SKILLS -> SkillsScreen()
-            AppDestinations.FAVOURITE -> PetsScreen()
-            AppDestinations.PROFILE -> PetsScreen()
-        }
+        NavDisplay(
+            backStack = backStack,
+            onBack = { backStack.removeLastOrNull() },
+            entryProvider = entryProvider {
+                entry<RouteSearch> {
+                    HomeScreen()
+                }
+                entry<RoutePets> {
+                    PetsScreen()
+                }
+                entry<RouteSkills> {
+                    SkillsScreen()
+                }
+                entry<RouteTags> {
+                    PetsScreen()
+                }
+                entry<RouteProfile> {
+                    PetsScreen()
+                }
+            }
+        )
     }
-}
-
-enum class AppDestinations(
-    val label: String,
-    val icon: Int,
-) {
-    HOME("查找", R.drawable.ic_home),
-    PETS("精灵", R.drawable.ic_home),
-    SKILLS("技能", R.drawable.ic_home),
-    FAVOURITE("收藏", R.drawable.ic_favorite),
-    PROFILE("关于", R.drawable.ic_account_box),
 }
