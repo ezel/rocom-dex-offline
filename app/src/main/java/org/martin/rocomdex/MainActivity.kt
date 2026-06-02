@@ -1,6 +1,7 @@
 package org.martin.rocomdex
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -21,29 +22,46 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
+import androidx.room.Room
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.martin.rocomdex.data.DexDatabase
+import org.martin.rocomdex.data.DexRepository
 import org.martin.rocomdex.ui.HomeScreen
 import org.martin.rocomdex.ui.pet.PetsScreen
+import org.martin.rocomdex.ui.profile.ProfileScreen
+import org.martin.rocomdex.ui.profile.ProfileViewModel
 import org.martin.rocomdex.ui.skill.SkillsScreen
 import org.martin.rocomdex.ui.theme.RocomDexTheme
+import kotlin.jvm.java
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Log.d("Main","Create database from asset")
+        val db = Room.databaseBuilder(
+            applicationContext,
+                DexDatabase::class.java, "data.db"
+            ).createFromAsset("rocom.db").fallbackToDestructiveMigration(false).build()
+        Log.d("Main","Created database from asset")
+
         enableEdgeToEdge()
         setContent {
             RocomDexTheme {
-                RocomDexApp()
+                RocomDexApp(db)
             }
         }
     }
 }
 
-@PreviewScreenSizes
 @Composable
-fun RocomDexApp() {
+fun RocomDexApp(db: DexDatabase) {
     var currentDestination by rememberSaveable { mutableStateOf(RouteDestinations.HOME) }
     val backStack = remember { mutableStateListOf<Any>(RouteSearch) }
 
@@ -81,7 +99,10 @@ fun RocomDexApp() {
                     PetsScreen()
                 }
                 entry<RouteProfile> {
-                    PetsScreen()
+                    val repo = DexRepository(db)
+                    val pvm: ProfileViewModel =
+                        viewModel(factory = ProfileViewModel.provideFactory(repo))
+                    ProfileScreen(pvm)
                 }
             }
         )
