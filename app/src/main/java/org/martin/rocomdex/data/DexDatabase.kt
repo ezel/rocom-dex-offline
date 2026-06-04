@@ -57,6 +57,20 @@ data class PetWithFeature(
     val feature: Feature
 )
 
+val NullPet : Pet = Pet(
+    0,0,"NoName", 0, 5, null, 0, null, null,
+    0, 0, 0,0,0,0,0,null, null, null, "", null
+)
+
+val NullFeature : Feature = Feature (
+    0, "NoName", "", null, "", null
+)
+
+val NullPetWithFeature : PetWithFeature = PetWithFeature(
+    pet = NullPet,
+    feature = NullFeature
+)
+
 @Dao
 interface PetDao {
     @Query("SELECT * FROM pet_base ORDER BY hid")
@@ -64,7 +78,11 @@ interface PetDao {
 
     @Transaction
     @Query("SELECT * FROM pet_base ORDER BY hid")
-    fun loadAllPetsWithFeature(): Flow<List<PetWithFeature>>
+    suspend fun loadAllPetsWithFeature(): List<PetWithFeature>
+
+    @Transaction
+    @Query("SELECT * FROM pet_base WHERE id = :pid ")
+    suspend fun loadOnePetWithFeature(pid: Int): PetWithFeature
 }
 
 @Database(entities = [Pet::class, Feature::class], version=1)
