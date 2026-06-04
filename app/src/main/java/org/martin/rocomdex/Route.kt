@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 data object RouteSearch : NavKey
 
 @Serializable
-data class RoutePets(val id: String) : NavKey
+data class RoutePets(val id: Int?) : NavKey
 
 @Serializable
 data class RouteSkills(val id: String) : NavKey
@@ -26,7 +26,7 @@ enum class RouteDestinations(
     val route: NavKey
 ) {
     HOME("查找", R.drawable.ic_home, RouteSearch),
-    PETS("精灵", R.drawable.ic_home, RoutePets("")),
+    PETS("精灵", R.drawable.ic_home, RoutePets(null)),
     SKILLS("技能", R.drawable.ic_home, RouteSkills("")),
     FAVOURITE("收藏", R.drawable.ic_favorite, RouteTags("")),
     PROFILE("关于", R.drawable.ic_account_box, RouteProfile("")),

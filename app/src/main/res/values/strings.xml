@@ -1,3 +1,39 @@
 <resources>
     <string name="app_name">RocomDex</string>
+
+    <string name="type_2">普通</string>
+    <string name="type_3">草</string>
+    <string name="type_4">火</string>
+    <string name="type_5">水</string>
+    <string name="type_6">光</string>
+    <string name="type_8">地</string>
+    <string name="type_9">冰</string>
+    <string name="type_10">龙</string>
+    <string name="type_11">电</string>
+    <string name="type_12">毒</string>
+    <string name="type_13">虫</string>
+    <string name="type_14">武</string>
+    <string name="type_15">翼</string>
+    <string name="type_16">萌</string>
+    <string name="type_17">幽</string>
+    <string name="type_18">恶</string>
+    <string name="type_19">机械</string>
+    <string name="type_20">幻</string>
+
+    <string name="stage_10">最终形态</string>
+    <string name="stage_2">Ⅱ阶</string>
+    <string name="stage_1">Ⅰ阶</string>
+
+    <string name="form_1">原始形态</string>
+    <string name="form_3">首领形态</string>
+    <string name="form_2">地区形态</string>
+
+    <string name="category_1">精灵技能</string>
+    <string name="category_3">血脉技能</string>
+    <string name="category_2">可学技能石</string>
+
+    <string name="skillType_2">魔攻</string>
+    <string name="skillType_1">物攻</string>
+    <string name="skillType_3">状态</string>
+    <string name="skillType_4">防御</string>
 </resources>
