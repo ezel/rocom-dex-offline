@@ -75,16 +75,16 @@ fun RocomDexApp(db: DexDatabase) {
                 entry<RouteSearch> {
                     HomeScreen()
                 }
-                entry<RoutePets> { key ->
-                    if (key.id != null) {
-                        PetDetailScreen(
-                            viewModel(factory = PetsViewModel.provideFactory(repo)),
-                            key.id)
-                    } else {
-                        PetsScreen(
-                            viewModel(factory = PetsViewModel.provideFactory(repo)),
-                            { id -> backStack.add(RoutePets(id)) })
-                    }
+                entry<RoutePetsList> {
+                    PetsScreen(
+                        viewModel(factory = PetsViewModel.provideFactory(repo)),
+                        { id -> backStack.add(RoutePet(id)) })
+                }
+                entry<RoutePet> { key ->
+                    PetDetailScreen(
+                        viewModel(factory = PetsViewModel.provideFactory(repo)),
+                        key.id
+                    )
                 }
                 entry<RouteSkills> {
                     SkillsScreen()
