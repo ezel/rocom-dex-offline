@@ -60,9 +60,9 @@ fun TypeItem(type1Id: Int, type2Id: Int?) {
 }
 
 @Composable
-fun TypeItemRow(type1Id: Int, type2Id: Int?) {
+fun TypeItemRow(type1Id: Int, type2Id: Int?, modifier: Modifier = Modifier) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .height(22.dp)
             .width(64.dp)
     ) {
