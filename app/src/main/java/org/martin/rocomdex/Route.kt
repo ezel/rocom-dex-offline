@@ -14,7 +14,10 @@ data class RoutePetsList(val filter: Int? = null) : NavKey
 data class RoutePet(val id: Int) : NavKey
 
 @Serializable
-data class RouteSkills(val id: String) : NavKey
+data class RouteSkillsList(val filter: Int? = null) : NavKey
+
+@Serializable
+data class RouteSkill(val id: String) : NavKey
 
 @Serializable
 data class RouteTags(val id: String) : NavKey
@@ -30,7 +33,7 @@ enum class RouteDestinations(
 ) {
     HOME("查找", R.drawable.ic_home, RouteSearch),
     PETS("精灵", R.drawable.ic_home, RoutePetsList()),
-    SKILLS("技能", R.drawable.ic_home, RouteSkills("")),
+    SKILLS("技能", R.drawable.ic_home, RouteSkillsList()),
     FAVOURITE("收藏", R.drawable.ic_favorite, RouteTags("")),
     PROFILE("关于", R.drawable.ic_account_box, RouteProfile("")),
 }

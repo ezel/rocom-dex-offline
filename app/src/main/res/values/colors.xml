@@ -26,4 +26,10 @@
     <color name="type_18">#cf467a</color>
     <color name="type_19">#24b9a3</color>
     <color name="type_20">#9ca9ff</color>
+
+    <color name="skill_type_1">#f79481</color>
+    <color name="skill_type_2">#94a8cb</color>
+    <color name="skill_type_3">#cbc6bc</color>
+    <color name="skill_type_4">#917A56</color>
+
 </resources>

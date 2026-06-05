@@ -47,6 +47,13 @@ private val TypeInfoMap = mapOf(
     20 to TypeInfo(20, R.string.type_20, R.color.type_20)
 )
 
+private val SkillTypeInfoMap = mapOf(
+    1 to TypeInfo(1, R.string.skillType_1, R.color.skill_type_1),
+    2 to TypeInfo(2, R.string.skillType_2, R.color.skill_type_2),
+    3 to TypeInfo(3, R.string.skillType_3, R.color.skill_type_3),
+    4 to TypeInfo(4, R.string.skillType_4, R.color.skill_type_4),
+)
+
 @Composable
 fun TypeItem(type1Id: Int, type2Id: Int?) {
     Column(
@@ -60,9 +67,9 @@ fun TypeItem(type1Id: Int, type2Id: Int?) {
 }
 
 @Composable
-fun TypeItemRow(type1Id: Int, type2Id: Int?) {
+fun TypeItemRow(type1Id: Int, type2Id: Int?, modifier: Modifier = Modifier) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .height(22.dp)
             .width(64.dp)
     ) {
@@ -74,6 +81,34 @@ fun TypeItemRow(type1Id: Int, type2Id: Int?) {
     }
 }
 
+@Composable
+fun SkillTypeItemRow(typeId: Int, skillTypeId: Int) {
+    Row(
+        modifier = Modifier.height(22.dp).width(64.dp)
+    ) {
+        TypeBar(typeId)
+        Spacer(modifier=Modifier.width(2.dp))
+        SkillTypeBar(skillTypeId)
+    }
+}
+@Composable
+fun SkillTypeBar(skillType: Int) {
+    val typeInfo = SkillTypeInfoMap[skillType]!!
+    Text(
+        stringResource(id = typeInfo.stringResId),
+        color = colorResource(R.color.white),
+        fontSize = 10.sp,
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+            .background(
+                color = colorResource(id = typeInfo.colorResId),
+                shape = RoundedCornerShape(2.dp)
+            )
+            .height(22.dp)
+            .width(32.dp)
+            .wrapContentHeight(align = Alignment.CenterVertically)
+    )
+}
 
 @Composable
 fun TypeBar(typeId: Int) {
@@ -97,5 +132,6 @@ fun TypeBar(typeId: Int) {
 @Preview
 @Composable
 fun PreviewTypeBar() {
-    TypeItemRow(10, 2)
+    //TypeItemRow(10, 2)
+    SkillTypeItemRow(3, 2)
 }

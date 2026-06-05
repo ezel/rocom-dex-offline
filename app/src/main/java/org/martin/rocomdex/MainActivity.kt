@@ -27,6 +27,7 @@ import org.martin.rocomdex.ui.pet.PetsViewModel
 import org.martin.rocomdex.ui.profile.ProfileScreen
 import org.martin.rocomdex.ui.profile.ProfileViewModel
 import org.martin.rocomdex.ui.skill.SkillsScreen
+import org.martin.rocomdex.ui.skill.SkillsViewModel
 import org.martin.rocomdex.ui.theme.RocomDexTheme
 
 class MainActivity : ComponentActivity() {
@@ -61,7 +62,12 @@ fun RocomDexApp(db: DexDatabase) {
                     },
                     label = { Text(it.label) },
                     selected = it == currentDestination,
-                    onClick = { backStack.add(it.route) }
+                    onClick = {
+                        if (backStack.last() !== it.route) {
+                            backStack.add(it.route);
+                            currentDestination = it
+                        }
+                    }
                 )
             }
         }
@@ -86,11 +92,13 @@ fun RocomDexApp(db: DexDatabase) {
                         key.id
                     )
                 }
-                entry<RouteSkills> {
-                    SkillsScreen()
+                entry<RouteSkillsList> {
+                    SkillsScreen(
+                        viewModel(factory = SkillsViewModel.provideFactory(repo))
+                    )
                 }
                 entry<RouteTags> {
-                    SkillsScreen()
+                    HomeScreen()
                 }
                 entry<RouteProfile> {
                     val repo = DexRepository(db)

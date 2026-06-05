@@ -19,13 +19,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,13 +32,16 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import org.martin.rocomdex.data.Pet
+import org.martin.rocomdex.ui.component.SimpleTable
+import org.martin.rocomdex.ui.component.SimpleTableData
 import org.martin.rocomdex.ui.component.TypeItem
+import kotlin.collections.listOf
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PetsScreen(viewModel: PetsViewModel, clickPetOnList: (Int) -> Unit) {
     LaunchedEffect(Unit) {
-        viewModel.fetchAllPets("from pets")
+        viewModel.fetchAllPets()
     }
     // 定义缓存窗口：在滚动方向上提前预提取 150.dp，并在滑出视口后保留 100.dp 的项目
     //val dpCacheWindow = LazyLayoutCacheWindow(ahead = 150.dp, behind = 100.dp)
@@ -53,8 +54,8 @@ fun PetsScreen(viewModel: PetsViewModel, clickPetOnList: (Int) -> Unit) {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         val pets = viewModel.petsList.collectAsStateWithLifecycle().value
         LazyColumn(state = state, modifier = Modifier.padding(innerPadding)) {
-            items(pets, key = { pet -> pet.pet.id }) { pet ->
-                PetsListItem(pet.pet, clickPetOnList)
+            items(pets, key = { pet -> pet.id }) { pet ->
+                PetsListItem(pet, clickPetOnList)
             }
         }
     }
@@ -116,44 +117,13 @@ fun PetsListItem(pet: Pet, onClick: (Int) -> Unit = {}) {
             TypeItem(pet.type1Id, pet.type2Id)
             Spacer(modifier = Modifier.width(2.dp))
             SimpleTable(
-                TableData(
+                SimpleTableData(
+                    listOf("HP", "Atk", "SpA", "Def", "SpD", "Spe", "BST"),
                     listOf(
-                        pet.raceHP, pet.racePAtk, pet.raceSAtk,
-                        pet.racePDef, pet.raceSDef, pet.raceSpe, pet.raceSum
+                        pet.raceHP.toString(), pet.racePAtk.toString(), pet.raceSAtk.toString(),
+                        pet.racePDef.toString(), pet.raceSDef.toString(), pet.raceSpe.toString(), pet.raceSum.toString()
                     )
                 )
-            )
-        }
-    }
-}
-
-@Immutable
-data class TableData(val values: List<Int>)
-
-@Composable
-fun SimpleTable(data: TableData) {
-    val headers = listOf("HP", "Atk", "SpA", "Def", "SpD", "Spe", "BST")
-    headers.indices.forEach { idx ->
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.width(if (idx == 6) 26.dp else 28.dp)
-        ) {
-
-            Text(
-                text = headers[idx],
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.outline,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Text(
-                text = data.values[idx].toString(),
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Normal,
-                color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
             )
         }
     }
@@ -166,13 +136,13 @@ fun PreviewRow() {
         PetsListItem(
             Pet(
                 110, 110, "NoName", 0, 5, 2, 0, "thisform2", null,
-                120, 320, 220, 110, 110, 330, 440, null, null, null, "", null
+                120, 320, 220, 110, 110, 330, 440, 30,null, null, null, "", null
             )
         )
         PetsListItem(
             Pet(
                 110, 110, "NoName", 0, 5, 2, 0, null, null,
-                120, 320, 220, 110, 110, 330, 440, null, null, null, "", null
+                120, 320, 220, 110, 110, 330, 440, 20,null, null, null, "", null
             )
         )
     }
