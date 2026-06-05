@@ -10,13 +10,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.martin.rocomdex.data.DexRepository
 import org.martin.rocomdex.data.NullPetWithFeature
+import org.martin.rocomdex.data.NullPetWithFeatureAndSkills
 import org.martin.rocomdex.data.PetWithFeature
+import org.martin.rocomdex.data.PetWithFeatureAndSkills
 
 class PetsViewModel(private val dexRepository: DexRepository) : ViewModel() {
     private val _petsList = MutableStateFlow<List<PetWithFeature>>(emptyList())
     val petsList = _petsList.asStateFlow()
 
-    private val _pet = MutableStateFlow<PetWithFeature>(NullPetWithFeature)
+    private val _pet = MutableStateFlow<PetWithFeatureAndSkills>(NullPetWithFeatureAndSkills)
     val pet = _pet.asStateFlow()
     fun fetchAllPets(infoStr: String) {
         Log.d(TAG, infoStr)

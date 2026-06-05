@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Database
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.Junction
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Relation
@@ -48,13 +49,59 @@ data class Feature (
     @ColumnInfo(name="version_id") val versionId: Int?
 )
 
+@Entity(tableName = "skill")
+data class Skill (
+    @PrimaryKey val id: Int,
+    val name: String,
+    val desc: String,
+    @ColumnInfo(name="skill_type") val skillType: Int,
+    @ColumnInfo(name="damage_type") val damageType: Int,
+    val energy: Int,
+    val damage: Int?,
+    @ColumnInfo(name="target_type") val targetType: Int?,
+    val res: String,
+    @ColumnInfo(name="version_id") val versionId: Int?
+)
+
 data class PetWithFeature(
     @Embedded val pet: Pet,
+
     @Relation(
         parentColumn = "feature",
         entityColumn = "id"
     )
     val feature: Feature
+)
+
+@Entity(primaryKeys = ["pid", "skid", "type"], tableName = "pets_skills")
+data class PetsSkillsCrossRef(
+    val pid: Int,
+    val skid: Int,
+    val type: Int,
+    val info: Int?,
+    @ColumnInfo(name="version_id") val versionId: Int?
+)
+
+data class PetWithFeatureAndSkills(
+    @Embedded val pet: Pet,
+
+    @Relation(
+        parentColumn = "feature",
+        entityColumn = "id"
+    )
+    val feature: Feature,
+
+    @Relation(
+        parentColumn = "id",
+//        entity = Skill::class,
+        entityColumn = "id",
+        associateBy = Junction(
+            value = PetsSkillsCrossRef::class,
+            parentColumn = "pid",
+            entityColumn = "skid"
+        )
+    )
+    val skills: List<Skill>
 )
 
 val NullPet : Pet = Pet(
@@ -71,6 +118,12 @@ val NullPetWithFeature : PetWithFeature = PetWithFeature(
     feature = NullFeature
 )
 
+val NullPetWithFeatureAndSkills : PetWithFeatureAndSkills = PetWithFeatureAndSkills(
+    pet = NullPet,
+    feature = NullFeature,
+    skills = emptyList()
+)
+
 @Dao
 interface PetDao {
     @Query("SELECT * FROM pet_base ORDER BY hid")
@@ -83,9 +136,13 @@ interface PetDao {
     @Transaction
     @Query("SELECT * FROM pet_base WHERE id = :pid ")
     suspend fun loadOnePetWithFeature(pid: Int): PetWithFeature
+
+    @Transaction
+    @Query("SELECT * FROM pet_base WHERE id = :pid ")
+    suspend fun loadOnePetWithFeatureAndSkills(pid: Int): PetWithFeatureAndSkills
 }
 
-@Database(entities = [Pet::class, Feature::class], version=1)
+@Database(entities = [Pet::class, Feature::class, Skill::class, PetsSkillsCrossRef::class], version=1)
 abstract class DexDatabase : RoomDatabase() {
     abstract fun petDao(): PetDao
 }

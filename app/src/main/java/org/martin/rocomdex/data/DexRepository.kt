@@ -7,7 +7,7 @@ class DexRepository(private val db: DexDatabase) {
     suspend fun getAllPets(): List<PetWithFeature> {
         return db.petDao().loadAllPetsWithFeature()
     }
-    suspend fun getOnePet(id: Int): PetWithFeature {
-        return db.petDao().loadOnePetWithFeature(id)
+    suspend fun getOnePet(id: Int): PetWithFeatureAndSkills {
+        return db.petDao().loadOnePetWithFeatureAndSkills(id)
     }
 }
