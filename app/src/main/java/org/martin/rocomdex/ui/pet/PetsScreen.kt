@@ -81,7 +81,7 @@ fun PetsListItem(pet: Pet, onClick: (Int) -> Unit = {}) {
                 modifier = Modifier.width(16.dp)
             )
             AsyncImage(
-                model = "file:///android_asset/icon/pets/${pet.res}.webp",
+                model = "file:///android_asset/icon/icons/${pet.res}.webp",
                 contentDescription = pet.res,
                 modifier = Modifier.size(40.dp)
             )
