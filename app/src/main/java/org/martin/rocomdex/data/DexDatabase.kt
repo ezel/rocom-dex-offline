@@ -32,6 +32,7 @@ data class Pet (
     @ColumnInfo(name="race_sdef") val raceSDef: Int,
     @ColumnInfo(name="race_spe") val raceSpe: Int,
     @ColumnInfo(name="race_sum") val raceSum: Int,
+    val wish: Int,
     @ColumnInfo(name="egg1") val egg1Id: Int?,
     @ColumnInfo(name="egg2") val egg2Id: Int?,
     val evolution: String?,
@@ -106,7 +107,7 @@ data class PetWithFeatureAndSkills(
 
 val NullPet : Pet = Pet(
     0,0,"NoName", 0, 5, null, 0, null, null,
-    0, 0, 0,0,0,0,0,null, null, null, "", null
+    0, 0, 0,0,0,0,0,0, null, null, null, "", null
 )
 
 val NullFeature : Feature = Feature (
@@ -127,7 +128,7 @@ val NullPetWithFeatureAndSkills : PetWithFeatureAndSkills = PetWithFeatureAndSki
 @Dao
 interface PetDao {
     @Query("SELECT * FROM pet_base ORDER BY hid")
-    fun loadAllPets(): Array<Pet>
+    suspend fun loadAllPets(): List<Pet>
 
     @Transaction
     @Query("SELECT * FROM pet_base ORDER BY hid")
@@ -142,7 +143,14 @@ interface PetDao {
     suspend fun loadOnePetWithFeatureAndSkills(pid: Int): PetWithFeatureAndSkills
 }
 
+@Dao
+interface SkillDao {
+    @Query("SELECT * FROM skill")
+    fun loadAllSkills(): List<Skill>
+}
+
 @Database(entities = [Pet::class, Feature::class, Skill::class, PetsSkillsCrossRef::class], version=1)
 abstract class DexDatabase : RoomDatabase() {
     abstract fun petDao(): PetDao
+    abstract fun skillDao(): SkillDao
 }
