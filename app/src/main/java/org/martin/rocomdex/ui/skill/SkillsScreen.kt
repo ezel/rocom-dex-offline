@@ -34,7 +34,7 @@ import org.martin.rocomdex.ui.component.SkillTypeItemRow
 import kotlin.collections.listOf
 
 @Composable
-fun SkillsScreen(viewModel: SkillsViewModel) {
+fun SkillsScreen(viewModel: SkillsViewModel, onClick: (Int) -> Unit) {
     LaunchedEffect(Unit) {
         viewModel.fetchAllSkills()
     }
@@ -42,7 +42,7 @@ fun SkillsScreen(viewModel: SkillsViewModel) {
         val skills = viewModel.skillsList.collectAsStateWithLifecycle().value
         LazyColumn(modifier = Modifier.padding(innerPadding)) {
             items(skills, key = { skill -> skill.id }) { skill ->
-                SkillsListItem(skill, {})
+                SkillsListItem(skill, onClick)
             }
         }
     }

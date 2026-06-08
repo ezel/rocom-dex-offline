@@ -17,7 +17,7 @@ data class RoutePet(val id: Int) : NavKey
 data class RouteSkillsList(val filter: Int? = null) : NavKey
 
 @Serializable
-data class RouteSkill(val id: String) : NavKey
+data class RouteSkill(val id: Int) : NavKey
 
 @Serializable
 data class RouteTags(val id: String) : NavKey

@@ -26,6 +26,7 @@ import org.martin.rocomdex.ui.pet.PetsScreen
 import org.martin.rocomdex.ui.pet.PetsViewModel
 import org.martin.rocomdex.ui.profile.ProfileScreen
 import org.martin.rocomdex.ui.profile.ProfileViewModel
+import org.martin.rocomdex.ui.skill.SkillDetailScreen
 import org.martin.rocomdex.ui.skill.SkillsScreen
 import org.martin.rocomdex.ui.skill.SkillsViewModel
 import org.martin.rocomdex.ui.theme.RocomDexTheme
@@ -94,7 +95,14 @@ fun RocomDexApp(db: DexDatabase) {
                 }
                 entry<RouteSkillsList> {
                     SkillsScreen(
-                        viewModel(factory = SkillsViewModel.provideFactory(repo))
+                        viewModel(factory = SkillsViewModel.provideFactory(repo)),
+                        { id -> backStack.add(RouteSkill(id)) }
+                    )
+                }
+                entry<RouteSkill> { key ->
+                    SkillDetailScreen(
+                        viewModel(factory = SkillsViewModel.provideFactory(repo)),
+                        key.id
                     )
                 }
                 entry<RouteTags> {
