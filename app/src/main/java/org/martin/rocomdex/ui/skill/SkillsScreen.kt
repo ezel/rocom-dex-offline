@@ -79,7 +79,7 @@ fun SkillsListItem(skill: Skill, onClick: (Int) -> Unit = {}) {
             Spacer(modifier = Modifier.width(4.dp))
             SimpleTable(
                 SimpleTableData(
-                    listOf("Power", "Energy"),
+                    listOf("Power", "Cost"),
                     listOf(skill.damage?.toString() ?: "-", skill.energy.toString())
                 ),
                 40.dp, 40.dp,
