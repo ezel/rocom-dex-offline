@@ -25,6 +25,7 @@ data class Pet (
     val stage: Int,
     val form: String?,
     @ColumnInfo(name="form_type") val formType: Int?,
+    @ColumnInfo(name="bid") val bossId: Int?,
     @ColumnInfo(name="race_hp") val raceHP: Int,
     @ColumnInfo(name="race_patk") val racePAtk: Int,
     @ColumnInfo(name="race_satk") val raceSAtk: Int,
@@ -87,6 +88,9 @@ data class PetsSkillsCrossRef(
 data class PetEvolution(
     val root: Int,
     val path: String,
+    val stage1: String,
+    val stage2: String?,
+    val stage3: String?,
     @ColumnInfo(name="version_id") val versionId: Int?
 )
 
@@ -120,8 +124,19 @@ data class SkillsOfPet(
     )
     val skill: Skill
 )
+
+data class PetIconInfo(
+    val id: Int,
+    //val hid: Int,
+    val name: String,
+    //val stage: Int,
+    val form: String?,
+    //val formType: Int?,
+    val res: String,
+)
+
 val NullPet : Pet = Pet(
-    0,0,"NoName", 0, 5, null, 0, null, null,
+    0,0,"NoName", 0, 5, null, 0, null, null, 2,
     0, 0, 0,0,0,0,0,0, null, null, null, "", null
 )
 
@@ -160,12 +175,21 @@ interface PetDao {
     @Transaction
     @Query("SELECT * FROM pets_skills WHERE pid = :pid ")
     suspend fun loadOnePetSkillsList(pid: Int): List<SkillsOfPet>
+
+    @Query("SELECT * FROM pet_evolution WHERE path like '%' || :pid || '%' ")
+    suspend fun loadOnePetEvolutionChain(pid: Int): List<PetEvolution>
+
+    @Query("SELECT id, name, form, res FROM pet_base WHERE id = :pid ")
+    suspend fun loadOnePetIconInfo(pid: Int): PetIconInfo
+
+    @Query("SELECT id, name, form, res FROM pet_base WHERE id in (:pids) ")
+    suspend fun loadPetIconInfoLists(pids: List<Int>) : List<PetIconInfo>
 }
 
 @Dao
 interface SkillDao {
     @Query("SELECT * FROM skill")
-    fun loadAllSkills(): List<Skill>
+    suspend fun loadAllSkills(): List<Skill>
 }
 
 @Database(entities = [Pet::class, Feature::class, Skill::class, PetsSkillsCrossRef::class, PetEvolution::class], version=1)

@@ -70,7 +70,7 @@ fun PetDetailScreen(viewModel: PetsViewModel, petId: Int) {
         topBar = {
             TopAppBar(
                 title = {
-                    Row() {
+                    Row {
                         Text(
                             text = buildAnnotatedString {
                                 append(pet.pet.name)
@@ -114,40 +114,40 @@ fun PetDetailScreen(viewModel: PetsViewModel, petId: Int) {
 }
 
 @Composable
-fun PetCard(pwf: PetDetailModel, modifier: Modifier = Modifier) {
-    val pet = pwf.pet;
-    val feature = pwf.feature;
+fun PetCard(petModel: PetDetailModel, modifier: Modifier = Modifier) {
+    val pet = petModel.pet
+    val feature = petModel.feature
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
-    val positionHMHeader = remember(pwf.skillMapCount) {
-        2 + (pwf.skillMapCount[1] ?: 0)
+    val positionHMHeader = remember(petModel.skillMapCount) {
+        2 + (petModel.skillMapCount[1] ?: 0)
     }
     val positionBloodHeader = remember(positionHMHeader) {
-        positionHMHeader + (pwf.skillMapCount[2] ?: 0)
+        positionHMHeader + (petModel.skillMapCount[2] ?: 0)
     }
 
     val visitHMListHeader by remember(positionHMHeader) {
         derivedStateOf { listState.firstVisibleItemIndex > positionHMHeader }
     }
-    val visitBloodHeader by remember(pwf.skillMapCount) {
+    val visitBloodHeader by remember(petModel.skillMapCount) {
         derivedStateOf { listState.firstVisibleItemIndex > positionBloodHeader }
     }
     Surface(modifier = modifier) {
         LazyColumn(state = listState) {
             item {
                 // basic information
-                Row() {
+                Row {
                     AsyncImage(
                         model = "file:///android_asset/icon/pets/${pet.res}.webp",
                         contentDescription = pet.res,
                         modifier = Modifier.size(160.dp)
                     )
-                    Column() {
+                    Column {
                         Text("Types:")
                         TypeItemRow(pet.type1Id, pet.type2Id, Modifier.padding(start = 10.dp))
                         Text("Feature:")
-                        Row() {
+                        Row {
                             AsyncImage(
                                 model = "file:///android_asset/icon/skills/${feature.res}.webp",
                                 contentDescription = feature.res,
@@ -157,7 +157,7 @@ fun PetCard(pwf: PetDetailModel, modifier: Modifier = Modifier) {
                                     .border(BorderStroke(2.dp, Color.White), CircleShape)
                                     .clip(CircleShape)
                             )
-                            Column() {
+                            Column {
                                 Text(feature.name)
                                 Text(feature.desc)
                             }
@@ -183,13 +183,28 @@ fun PetCard(pwf: PetDetailModel, modifier: Modifier = Modifier) {
                     Text("max", fontSize = 12.sp, modifier = Modifier.width(34.dp))
                     Text("max+", fontSize = 12.sp, modifier = Modifier.width(34.dp))
                 }
-                RaceRow("HP:", pwf.stats["hp"]!!)
-                RaceRow("Atk:", pwf.stats["atk"]!!)
-                RaceRow("SAtk:", pwf.stats["satk"]!!)
-                RaceRow("Def:", pwf.stats["def"]!!)
-                RaceRow("SDef:", pwf.stats["sdef"]!!)
-                RaceRow("Spd:", pwf.stats["spd"]!!)
+                RaceRow("HP:", petModel.stats["hp"]!!)
+                RaceRow("Atk:", petModel.stats["atk"]!!)
+                RaceRow("SAtk:", petModel.stats["satk"]!!)
+                RaceRow("Def:", petModel.stats["def"]!!)
+                RaceRow("SDef:", petModel.stats["sdef"]!!)
+                RaceRow("Spd:", petModel.stats["spd"]!!)
+                Row {
+                    Text("Egg Groups:")
+                    if (pet.egg1Id != null) {
+                        TextButton(onClick = {}) { Text("Egg ${pet.egg1Id}") }
+                        if (pet.egg2Id != null) {
+                            TextButton(onClick = {}) { Text("Egg ${pet.egg2Id}") }
+                        }
+                        TextButton(onClick = {}) { Text("查找可孵蛋精灵") }
+                    } else {
+                        Text("不能孵蛋")
+                    }
+                }
                 Text("Evolution:")
+                Text(petModel.evolutions.toString())
+                // →
+                Text("Forms:")
                 Text("Move Lists")
             }
             stickyHeader(contentType = "skillsOfPetHeader") {
@@ -243,7 +258,7 @@ fun PetCard(pwf: PetDetailModel, modifier: Modifier = Modifier) {
                     HorizontalDivider()
                 }
             }
-            pwf.skillMap.forEach { (i, skills) ->
+            petModel.skillMap.forEach { (i, skills) ->
                 if (i > 1) {
                     item {
                         ListItem(
@@ -270,7 +285,7 @@ fun PetCard(pwf: PetDetailModel, modifier: Modifier = Modifier) {
 
 @Composable
 fun RaceRow(title: String, value: List<Int>) {
-    Row() {
+    Row {
         Text(
             "${title}${value[0]}",
             fontSize = 14.sp,
@@ -316,7 +331,7 @@ fun PreviewPetDetail() {
             append(petName)
             val startForm = length
             if (petForm != null) {
-                append("-" + petForm)
+                append("-$petForm")
 
                 addStyle(
                     style = SpanStyle(
@@ -329,7 +344,7 @@ fun PreviewPetDetail() {
             }
 
             val startHid = length
-            append(" #" + petHid)
+            append(" #$petHid")
             addStyle(
                 style = SpanStyle(
                     fontSize = 12.sp,
