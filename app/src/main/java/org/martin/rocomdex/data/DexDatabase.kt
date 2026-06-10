@@ -173,7 +173,7 @@ interface PetDao {
     suspend fun loadOnePetWithFeatureAndSkills(pid: Int): PetWithFeatureAndSkills
 
     @Transaction
-    @Query("SELECT * FROM pets_skills WHERE pid = :pid ")
+    @Query("SELECT * FROM pets_skills WHERE pid = :pid ORDER BY type, info")
     suspend fun loadOnePetSkillsList(pid: Int): List<SkillsOfPet>
 
     @Query("SELECT * FROM pet_evolution WHERE path like '%' || :pid || '%' ")

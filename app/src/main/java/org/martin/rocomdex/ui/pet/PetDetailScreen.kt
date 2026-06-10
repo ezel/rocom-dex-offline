@@ -208,54 +208,60 @@ fun PetCard(petModel: PetDetailModel, modifier: Modifier = Modifier) {
                 Text("Move Lists")
             }
             stickyHeader(contentType = "skillsOfPetHeader") {
-                HorizontalDivider()
-                ListItem(
-                    headlineContent = {
-                        Text("Level Up")
-                    },
-                    trailingContent = {
-                        TextButton(
-                            onClick = {
-                                coroutineScope.launch { listState.scrollToItem(index = 2) }
-                            }) { Icon(reply, "jump top") }
-                    },
-                )
-                HorizontalDivider()
-                if (visitHMListHeader) {
-                    ListItem(
-                        headlineContent = {
-                            Text("HM")
-                        },
-                        trailingContent = {
-                            TextButton(
-                                onClick = {
-                                    coroutineScope.launch {
-                                        listState.scrollToItem(
-                                            index = positionHMHeader
-                                        )
-                                    }
-                                }) { Icon(reply, "jump top") }
-                        },
-                    )
-                    HorizontalDivider()
-                }
-                if (visitBloodHeader) {
-                    ListItem(
-                        headlineContent = {
-                            Text("Blood")
-                        },
-                        trailingContent = {
-                            TextButton(
-                                onClick = {
-                                    coroutineScope.launch {
-                                        listState.scrollToItem(
-                                            index = positionBloodHeader
-                                        )
-                                    }
-                                }) { Icon(reply, "jump top") }
-                        },
-                    )
-                    HorizontalDivider()
+                Surface {
+                    Column {
+                        HorizontalDivider()
+                        ListItem(
+                            headlineContent = {
+                                Text("Level Up")
+                            },
+                            trailingContent = {
+                                TextButton(
+                                    onClick = {
+                                        coroutineScope.launch { listState.scrollToItem(index = 2) }
+                                    }) { Icon(reply, "jump top") }
+                            },
+                        )
+                        HorizontalDivider()
+
+                        if (visitHMListHeader) {
+                            ListItem(
+                                headlineContent = {
+                                    Text("HM")
+                                },
+                                trailingContent = {
+                                    TextButton(
+                                        onClick = {
+                                            coroutineScope.launch {
+                                                listState.scrollToItem(
+                                                    index = positionHMHeader
+                                                )
+                                            }
+                                        }) { Icon(reply, "jump top") }
+                                },
+                            )
+                            HorizontalDivider()
+                        }
+
+                        if (visitBloodHeader) {
+                            ListItem(
+                                headlineContent = {
+                                    Text("Blood")
+                                },
+                                trailingContent = {
+                                    TextButton(
+                                        onClick = {
+                                            coroutineScope.launch {
+                                                listState.scrollToItem(
+                                                    index = positionBloodHeader
+                                                )
+                                            }
+                                        }) { Icon(reply, "jump top") }
+                                },
+                            )
+                            HorizontalDivider()
+                        }
+                    }
                 }
             }
             petModel.skillMap.forEach { (i, skills) ->
