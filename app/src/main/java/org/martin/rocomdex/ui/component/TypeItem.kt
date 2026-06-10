@@ -82,6 +82,17 @@ fun TypeItemRow(type1Id: Int, type2Id: Int?, modifier: Modifier = Modifier) {
 }
 
 @Composable
+fun SkillTypeItem(typeId: Int, skillTypeId: Int) {
+    Column(
+        modifier = Modifier.height(46.dp).width(32.dp)
+    ) {
+        TypeBar(typeId)
+        Spacer(modifier=Modifier.height(2.dp))
+        SkillTypeBar(skillTypeId)
+    }
+}
+
+@Composable
 fun SkillTypeItemRow(typeId: Int, skillTypeId: Int) {
     Row(
         modifier = Modifier.height(22.dp).width(64.dp)
@@ -133,5 +144,6 @@ fun TypeBar(typeId: Int) {
 @Composable
 fun PreviewTypeBar() {
     //TypeItemRow(10, 2)
-    SkillTypeItemRow(3, 2)
+    SkillTypeItem(2, 1)
+    //SkillTypeItemRow(3, 2)
 }

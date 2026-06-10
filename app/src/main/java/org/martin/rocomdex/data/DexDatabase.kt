@@ -83,6 +83,13 @@ data class PetsSkillsCrossRef(
     @ColumnInfo(name="version_id") val versionId: Int?
 )
 
+@Entity(primaryKeys = ["root", "path"], tableName="pet_evolution")
+data class PetEvolution(
+    val root: Int,
+    val path: String,
+    @ColumnInfo(name="version_id") val versionId: Int?
+)
+
 data class PetWithFeatureAndSkills(
     @Embedded val pet: Pet,
 
@@ -105,6 +112,14 @@ data class PetWithFeatureAndSkills(
     val skills: List<Skill>
 )
 
+data class SkillsOfPet(
+    @Embedded val petsSkillInfo: PetsSkillsCrossRef,
+    @Relation(
+        parentColumn = "skid",
+        entityColumn = "id"
+    )
+    val skill: Skill
+)
 val NullPet : Pet = Pet(
     0,0,"NoName", 0, 5, null, 0, null, null,
     0, 0, 0,0,0,0,0,0, null, null, null, "", null
@@ -141,6 +156,10 @@ interface PetDao {
     @Transaction
     @Query("SELECT * FROM pet_base WHERE id = :pid ")
     suspend fun loadOnePetWithFeatureAndSkills(pid: Int): PetWithFeatureAndSkills
+
+    @Transaction
+    @Query("SELECT * FROM pets_skills WHERE pid = :pid ")
+    suspend fun loadOnePetSkillsList(pid: Int): List<SkillsOfPet>
 }
 
 @Dao
@@ -149,7 +168,7 @@ interface SkillDao {
     fun loadAllSkills(): List<Skill>
 }
 
-@Database(entities = [Pet::class, Feature::class, Skill::class, PetsSkillsCrossRef::class], version=1)
+@Database(entities = [Pet::class, Feature::class, Skill::class, PetsSkillsCrossRef::class, PetEvolution::class], version=1)
 abstract class DexDatabase : RoomDatabase() {
     abstract fun petDao(): PetDao
     abstract fun skillDao(): SkillDao

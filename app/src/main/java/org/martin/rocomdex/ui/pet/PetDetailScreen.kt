@@ -13,17 +13,26 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
@@ -40,9 +49,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import kotlinx.coroutines.launch
 import org.martin.rocomdex.data.PetDetailModel
+import org.martin.rocomdex.ui.component.SkillsCompactListItem
 import org.martin.rocomdex.ui.component.TypeItemRow
-import org.martin.rocomdex.ui.skill.SkillsListItem
+import org.martin.rocomdex.ui.googleIcon.reply
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,7 +70,6 @@ fun PetDetailScreen(viewModel: PetsViewModel, petId: Int) {
         topBar = {
             TopAppBar(
                 title = {
-                    // TODO: use AnnotatedString
                     Row() {
                         Text(
                             text = buildAnnotatedString {
@@ -89,7 +99,6 @@ fun PetDetailScreen(viewModel: PetsViewModel, petId: Int) {
                                     start = startHid,
                                     end = length
                                 )
-
                             },
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
@@ -108,10 +117,24 @@ fun PetDetailScreen(viewModel: PetsViewModel, petId: Int) {
 fun PetCard(pwf: PetDetailModel, modifier: Modifier = Modifier) {
     val pet = pwf.pet;
     val feature = pwf.feature;
-    val skills = pwf.skills;
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
 
+    val positionHMHeader = remember(pwf.skillMapCount) {
+        2 + (pwf.skillMapCount[1] ?: 0)
+    }
+    val positionBloodHeader = remember(positionHMHeader) {
+        positionHMHeader + (pwf.skillMapCount[2] ?: 0)
+    }
+
+    val visitHMListHeader by remember(positionHMHeader) {
+        derivedStateOf { listState.firstVisibleItemIndex > positionHMHeader }
+    }
+    val visitBloodHeader by remember(pwf.skillMapCount) {
+        derivedStateOf { listState.firstVisibleItemIndex > positionBloodHeader }
+    }
     Surface(modifier = modifier) {
-        LazyColumn() {
+        LazyColumn(state = listState) {
             item {
                 // basic information
                 Row() {
@@ -167,11 +190,79 @@ fun PetCard(pwf: PetDetailModel, modifier: Modifier = Modifier) {
                 RaceRow("SDef:", pwf.stats["sdef"]!!)
                 RaceRow("Spd:", pwf.stats["spd"]!!)
                 Text("Evolution:")
-
                 Text("Move Lists")
             }
-            items(skills, key = { skill -> skill.skill.id }) { skill ->
-                SkillsListItem(skill.skill, { })
+            stickyHeader(contentType = "skillsOfPetHeader") {
+                HorizontalDivider()
+                ListItem(
+                    headlineContent = {
+                        Text("Level Up")
+                    },
+                    trailingContent = {
+                        TextButton(
+                            onClick = {
+                                coroutineScope.launch { listState.scrollToItem(index = 2) }
+                            }) { Icon(reply, "jump top") }
+                    },
+                )
+                HorizontalDivider()
+                if (visitHMListHeader) {
+                    ListItem(
+                        headlineContent = {
+                            Text("HM")
+                        },
+                        trailingContent = {
+                            TextButton(
+                                onClick = {
+                                    coroutineScope.launch {
+                                        listState.scrollToItem(
+                                            index = positionHMHeader
+                                        )
+                                    }
+                                }) { Icon(reply, "jump top") }
+                        },
+                    )
+                    HorizontalDivider()
+                }
+                if (visitBloodHeader) {
+                    ListItem(
+                        headlineContent = {
+                            Text("Blood")
+                        },
+                        trailingContent = {
+                            TextButton(
+                                onClick = {
+                                    coroutineScope.launch {
+                                        listState.scrollToItem(
+                                            index = positionBloodHeader
+                                        )
+                                    }
+                                }) { Icon(reply, "jump top") }
+                        },
+                    )
+                    HorizontalDivider()
+                }
+            }
+            pwf.skillMap.forEach { (i, skills) ->
+                if (i > 1) {
+                    item {
+                        ListItem(
+                            headlineContent = {
+                                Text(
+                                    when (i) {
+                                        2 -> "HM"
+                                        3 -> "Blood"
+                                        else -> "-"
+                                    }
+                                )
+                            },
+                        )
+                        HorizontalDivider()
+                    }
+                }
+                items(skills, key = { skill -> skill.skill.id }) { skill ->
+                    SkillsCompactListItem(skill, {})
+                }
             }
         }
     }

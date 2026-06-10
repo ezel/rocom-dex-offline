@@ -31,6 +31,7 @@ import org.martin.rocomdex.data.Skill
 import org.martin.rocomdex.ui.component.SimpleTable
 import org.martin.rocomdex.ui.component.SimpleTableData
 import org.martin.rocomdex.ui.component.SkillTypeItemRow
+import org.martin.rocomdex.ui.component.SkillsListItem
 import kotlin.collections.listOf
 
 @Composable
@@ -45,68 +46,5 @@ fun SkillsScreen(viewModel: SkillsViewModel, onClick: (Int) -> Unit) {
                 SkillsListItem(skill, onClick)
             }
         }
-    }
-}
-
-@Composable
-fun SkillsListItem(skill: Skill, onClick: (Int) -> Unit = {}) {
-    Card(
-        onClick = { onClick(skill.id) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(72.dp)
-            .padding(2.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(2.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            AsyncImage(
-                model = "file:///android_asset/icon/skills/${skill.res}.webp",
-                contentDescription = skill.res,
-                modifier = Modifier.size(40.dp)
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Text(
-                skill.name,
-                modifier = Modifier.width(80.dp),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            SkillTypeItemRow(skill.damageType, skill.skillType)
-            Spacer(modifier = Modifier.width(4.dp))
-            SimpleTable(
-                SimpleTableData(
-                    listOf("Power", "Cost"),
-                    listOf(skill.damage?.toString() ?: "-", skill.energy.toString())
-                ),
-                40.dp, 40.dp,
-                dataFontSize = 18.sp
-            )
-            Text(
-                skill.desc,
-                maxLines = 3,
-                fontSize = 14.sp,
-                lineHeight = 15.sp,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.fillMaxSize().padding(start=4.dp).wrapContentHeight(Alignment.CenterVertically)
-            )
-        }
-    }
-}
-
-
-@Preview
-@Composable
-fun PreviewRow() {
-    Column() {
-        SkillsListItem(
-            Skill(0, "abc", "def very long very long very long very long very long very long very long very long very long very long", 1,2,3,4,5,"101070", null )
-        )
-        SkillsListItem(
-            Skill(0, "abc", "造成物伤，敌方每有1层冻结，自己回复1能量。", 4,8,3,4,5,"102029", null )
-        )
     }
 }

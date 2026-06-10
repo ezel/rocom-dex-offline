@@ -55,6 +55,8 @@ data class PetDetailModel(
         "sdef" to raceToList(pet.raceSDef, ::calc5VStats),
         "spd" to raceToList(pet.raceSpe, ::calc5VStats),
     )
+    val skillMap: Map<Int, List<SkillsOfPet>> = skills.groupBy { it.petsSkillInfo.type }.toSortedMap()
+    val skillMapCount = skillMap.mapValues { it.value.size }
 
     companion object {
         fun fromPetWFS(sourcePet: PetWithFeature, sourceSkills: List<SkillsOfPet>): PetDetailModel {
