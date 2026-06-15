@@ -22,6 +22,7 @@ import org.martin.rocomdex.data.DexDatabase
 import org.martin.rocomdex.data.DexRepository
 import org.martin.rocomdex.ui.HomeScreen
 import org.martin.rocomdex.ui.pet.PetDetailScreen
+import org.martin.rocomdex.ui.pet.PetDetailViewModel
 import org.martin.rocomdex.ui.pet.PetsScreen
 import org.martin.rocomdex.ui.pet.PetsViewModel
 import org.martin.rocomdex.ui.profile.ProfileScreen
@@ -80,35 +81,42 @@ fun RocomDexApp(db: DexDatabase) {
             onBack = { backStack.removeLastOrNull() },
             entryProvider = entryProvider {
                 entry<RouteSearch> {
+                    currentDestination = RouteDestinations.HOME
                     HomeScreen()
                 }
                 entry<RoutePetsList> {
+                    currentDestination = RouteDestinations.PETS
                     PetsScreen(
                         viewModel(factory = PetsViewModel.provideFactory(repo)),
                         { id -> backStack.add(RoutePet(id)) })
                 }
                 entry<RoutePet> { key ->
+                    currentDestination = RouteDestinations.PETS
                     PetDetailScreen(
-                        viewModel(factory = PetsViewModel.provideFactory(repo)),
+                        viewModel(factory = PetDetailViewModel.provideFactory(repo, key.id)),
                         key.id
                     )
                 }
                 entry<RouteSkillsList> {
+                    currentDestination = RouteDestinations.SKILLS
                     SkillsScreen(
                         viewModel(factory = SkillsViewModel.provideFactory(repo)),
                         { id -> backStack.add(RouteSkill(id)) }
                     )
                 }
                 entry<RouteSkill> { key ->
+                    currentDestination = RouteDestinations.SKILLS
                     SkillDetailScreen(
                         viewModel(factory = SkillsViewModel.provideFactory(repo)),
                         key.id
                     )
                 }
                 entry<RouteTags> {
+                    currentDestination = RouteDestinations.FAVOURITE
                     HomeScreen()
                 }
                 entry<RouteProfile> {
+                    currentDestination = RouteDestinations.PROFILE
                     val repo = DexRepository(db)
                     val pvm: ProfileViewModel =
                         viewModel(factory = ProfileViewModel.provideFactory(repo))

@@ -11,33 +11,29 @@ import kotlinx.coroutines.launch
 import org.martin.rocomdex.data.DexRepository
 import org.martin.rocomdex.data.NullPetWithFeature
 import org.martin.rocomdex.data.NullPetWithFeatureAndSkills
-import org.martin.rocomdex.data.Pet
 import org.martin.rocomdex.data.PetDetailModel
-import org.martin.rocomdex.data.PetWithFeature
-import org.martin.rocomdex.data.PetWithFeatureAndSkills
 
-class PetsViewModel(private val dexRepository: DexRepository) : ViewModel() {
-    private val _petsList = MutableStateFlow<List<Pet>>(emptyList())
-    val petsList = _petsList.asStateFlow()
+class PetDetailViewModel(private val dexRepository: DexRepository, petId: Int) : ViewModel() {
+    private val _pet = MutableStateFlow<PetDetailModel>(PetDetailModel())
+    val pet = _pet.asStateFlow()
 
     init {
-        fetchAllPets()
+        fetchPet(petId)
     }
-
-    fun fetchAllPets() {
+    fun fetchPet(id: Int) {
+        Log.d(TAG, "get pet $id")
         viewModelScope.launch(Dispatchers.IO) {
-            _petsList.value = dexRepository.getAllPets()
+            _pet.value = dexRepository.getOnePet(id)
         }
     }
 
-
     companion object {
-        private const val TAG = "PetsViewModel"
-        fun provideFactory(repo: DexRepository): ViewModelProvider.Factory =
+        private const val TAG = "PetDetailViewModel"
+        fun provideFactory(repo: DexRepository, id: Int): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return PetsViewModel(repo) as T
+                    return PetDetailViewModel(repo, id) as T
                 }
             }
     }

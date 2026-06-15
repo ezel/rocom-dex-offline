@@ -58,10 +58,7 @@ import org.martin.rocomdex.ui.googleIcon.reply
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PetDetailScreen(viewModel: PetsViewModel, petId: Int) {
-    LaunchedEffect(Unit) {
-        viewModel.fetchPet(petId)
-    }
+fun PetDetailScreen(viewModel: PetDetailViewModel, petId: Int) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val pet = viewModel.pet.collectAsStateWithLifecycle().value
 

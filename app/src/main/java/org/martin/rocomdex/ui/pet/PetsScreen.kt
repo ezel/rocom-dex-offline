@@ -46,9 +46,6 @@ import org.martin.rocomdex.ui.googleIcon.crown
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PetsScreen(viewModel: PetsViewModel, clickPetOnList: (Int) -> Unit) {
-    LaunchedEffect(Unit) {
-        viewModel.fetchAllPets()
-    }
     // 定义缓存窗口：在滚动方向上提前预提取 150.dp，并在滑出视口后保留 100.dp 的项目
     //val dpCacheWindow = LazyLayoutCacheWindow(ahead = 150.dp, behind = 100.dp)
 
