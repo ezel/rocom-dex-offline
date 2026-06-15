@@ -1,6 +1,7 @@
 package org.martin.rocomdex.ui.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -60,6 +61,8 @@ fun TypeItem(type1Id: Int, type2Id: Int?) {
         modifier = Modifier
             .height(44.dp)
             .width(32.dp)
+        ,
+        verticalArrangement = Arrangement.Center
     ) {
         TypeBar(type1Id)
         if (type2Id != null) TypeBar(type2Id)

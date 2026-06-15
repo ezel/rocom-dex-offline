@@ -132,7 +132,7 @@ fun SkillsCompactListItem(sop: SkillsOfPet, onClick: (Int) -> Unit = {}) {
             },
             leadingContent = {
                 when(sop.petsSkillInfo.type) {
-                    1 -> Text(sop.petsSkillInfo.info.toString(), fontSize = 12.sp, modifier = Modifier.width(14.dp))
+                    1 -> Text(sop.petsSkillInfo.info.toString(), fontSize = 10.sp, modifier = Modifier.width(14.dp))
                     3 -> TypeBar(sop.petsSkillInfo.info!!)
                     else -> Text("-")
                 }
