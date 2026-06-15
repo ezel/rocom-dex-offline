@@ -7,7 +7,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
-fun SkillDetailScreen(viewModel: SkillsViewModel, skid: Int) {
+fun SkillDetailScreen(viewModel: SkillDetailViewModel, skid: Int) {
     LaunchedEffect(Unit) {
         viewModel.fetchSkill(skid)
     }

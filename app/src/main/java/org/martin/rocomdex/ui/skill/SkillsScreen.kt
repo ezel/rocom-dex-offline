@@ -36,9 +36,6 @@ import kotlin.collections.listOf
 
 @Composable
 fun SkillsScreen(viewModel: SkillsViewModel, onClick: (Int) -> Unit) {
-    LaunchedEffect(Unit) {
-        viewModel.fetchAllSkills()
-    }
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         val skills = viewModel.skillsList.collectAsStateWithLifecycle().value
         LazyColumn(modifier = Modifier.padding(innerPadding)) {

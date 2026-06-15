@@ -28,6 +28,7 @@ import org.martin.rocomdex.ui.pet.PetsViewModel
 import org.martin.rocomdex.ui.profile.ProfileScreen
 import org.martin.rocomdex.ui.profile.ProfileViewModel
 import org.martin.rocomdex.ui.skill.SkillDetailScreen
+import org.martin.rocomdex.ui.skill.SkillDetailViewModel
 import org.martin.rocomdex.ui.skill.SkillsScreen
 import org.martin.rocomdex.ui.skill.SkillsViewModel
 import org.martin.rocomdex.ui.theme.RocomDexTheme
@@ -107,7 +108,7 @@ fun RocomDexApp(db: DexDatabase) {
                 entry<RouteSkill> { key ->
                     currentDestination = RouteDestinations.SKILLS
                     SkillDetailScreen(
-                        viewModel(factory = SkillsViewModel.provideFactory(repo)),
+                        viewModel(factory = SkillDetailViewModel.provideFactory(repo, key.id)),
                         key.id
                     )
                 }
