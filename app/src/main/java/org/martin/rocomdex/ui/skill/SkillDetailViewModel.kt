@@ -13,11 +13,11 @@ import org.martin.rocomdex.data.Skill
 
 
 class SkillDetailViewModel(private val dexRepository: DexRepository, skId: Int) : ViewModel() {
-    //private val _skill = MutableStateFlow<Skill>(Skill())
-    //val skill = _skill.asStateFlow()
+    private val _skill = MutableStateFlow<Skill?>(null)
+    val skill = _skill.asStateFlow()
 
     init {
-
+        fetchSkill(skId)
     }
     fun fetchSkill(id: Int) {
         Log.d(TAG, "get skill $id")
